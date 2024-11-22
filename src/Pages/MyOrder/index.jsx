@@ -31,6 +31,7 @@ function MyOrder() {
                                 title={product.title}
                                 imageUrl={product.images}
                                 price={product.price}
+                                total={product.cantidad}
                             />
                         ))
                     }

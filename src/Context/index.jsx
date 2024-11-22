@@ -1,11 +1,30 @@
 import { createContext, useState, useEffect } from 'react'
+import { useLocalStorage } from './useLocalStorage'
+
 
 
 export const ShoppingCartContext = createContext()
 
 export const ShoppingCartProvider = ({ children }) => {
+    const {
+        user: users,
+        saveItem: saveUser,
+    } = useLocalStorage('account', {})
+
+    const {
+        user: signOut,
+        saveItem: saveSign,
+    } = useLocalStorage('sign-out', false)
+
     // Shopping Cart · Increment quantity
     const [count, setCount] = useState(0)
+    const [cantidad, setCantidad] = useState(0)
+   const [exit, setExit] = useState(false)
+
+    const addUser = (usuarios) => {
+        saveUser(usuarios)
+    }
+
 
     // Product Detail · Open/Close
     const [isProductDetailOpen, setIsProductDetailOpen] = useState(false)
@@ -23,8 +42,10 @@ export const ShoppingCartProvider = ({ children }) => {
     // Shopping Cart · Add products to cart
     const [cartProducts, setCartProducts] = useState([])
 
+
     // Shopping Cart · Order
     const [order, setOrder] = useState([])
+
 
     // Get Products
     const [items, setItems] = useState(null)
@@ -35,12 +56,26 @@ export const ShoppingCartProvider = ({ children }) => {
 
     // Get Products by category
     const [searchByCategory, setSearchCategory] = useState(null)
-    
+
 
     useEffect(() => {
         fetch('https://api.escuelajs.co/api/v1/products')
             .then(response => response.json())
-            .then(data => setItems(data))
+            .then(data => {
+                let newProducts = data.map(item => (
+                    {
+                        id: item.id,
+                        title: item.title,
+                        images: item.images,
+                        price: item.price,
+                        cantidad: 1,
+                        category: item.category,
+                        description: item.description
+
+                    }
+                ))
+                setItems(newProducts)
+            })
     }, [])
 
     const filteredItemsByTitle = (items, searchByTitle) => {
@@ -48,7 +83,7 @@ export const ShoppingCartProvider = ({ children }) => {
     }
 
     const filteredItemsByCategory = (items, searchByCategory) => {
-         return items?.filter(item => item.category.name.toLowerCase().includes(searchByCategory.toLowerCase()))
+        return items?.filter(item => item.category.name.toLowerCase().includes(searchByCategory.toLowerCase()))
     }
 
     const filterBy = (searchType, items, searchByTitle, searchByCategory) => {
@@ -100,7 +135,16 @@ export const ShoppingCartProvider = ({ children }) => {
             setSearchByTitle,
             filteredItems,
             searchByCategory,
-            setSearchCategory
+            setSearchCategory,
+            cantidad,
+            setCantidad,
+            users,
+            addUser,
+            signOut,
+            saveSign,
+            exit, 
+            setExit
+
         }}>
             {children}
         </ShoppingCartContext.Provider>

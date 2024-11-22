@@ -4,7 +4,8 @@ import MyAccount from '../MyAccount'
 import MyOrder from '../MyOrder'
 import MyOrders from '../MyOrders'
 import NotFound from '../NotFound'
-import SingIn from '../SingIn'
+import SignIn from '../SignIn'
+import SingUp from '../SingUp'
 import Navbar from '../../Components/Navbar'
 import CheckOutSideMenu from '../../Components/CheckOutSideMenu'
 import './App.css'
@@ -26,7 +27,8 @@ const AppRoutes = () => {
     { path: '/my-orders', element: <MyOrders /> },
     { path: '/my-orders/last', element: <MyOrder /> },
     { path: '/my-orders/:id', element: <MyOrder /> },,
-    { path: '/sing-in', element: <SingIn /> },
+    { path: '/sign-in', element: <SignIn /> },
+    { path: '/sing-up', element: <SingUp /> },
     { path: '/*', element: <NotFound /> }
   ])
   return routes

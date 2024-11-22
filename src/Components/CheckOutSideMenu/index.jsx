@@ -15,6 +15,7 @@ const CheckoutSideMenu = () => {
         context.setCount(context.count - 1)
     }
     const handleCheckOut = () => {
+
         const orderToAdd = {
             date: '01.02.23',
             products: context.cartProducts,
@@ -28,8 +29,40 @@ const CheckoutSideMenu = () => {
         context.closeCheckoutSideMenu()
         context.setSearchByTitle(null)
 
+    }
+    const copia = () => {
+        let newProducts = context.items.map(item => (
+            {
+                id: item.id,
+                title: item.title,
+                images: item.images,
+                price: item.price,
+                cantidad: 1,
+                category: item.category,
+                description: item.description
+
+            }
+        ))
+        context.setItems( newProducts)
 
     }
+
+    const onAumentar = (id) => {
+        let index = context.cartProducts.findIndex((product) => product.id === id)
+        if (context.cartProducts[index].cantidad > 0 && context.cartProducts[index].id == id) {
+            context.setCantidad(context.cartProducts[index].cantidad += 1)
+            copia()
+        }
+    }
+
+    const onDisminuir = (id) => {
+        let index = context.cartProducts.findIndex((product) => product.id == id)
+        if (context.cartProducts[index].cantidad > 0 && context.cartProducts[index].id == id) {
+            context.setCantidad(context.cartProducts[index].cantidad -= 1)
+            copia()
+        }
+    }
+   
     return (
         <aside
             className={`${context.isCheckoutSideMenuOpen ? 'flex' : 'hidden'} checkout-side-menu flex-col fixed right-0 border border-black rounded-lg bg-white`}>
@@ -51,6 +84,10 @@ const CheckoutSideMenu = () => {
                             imageUrl={product.images}
                             price={product.price}
                             handleDelete={handleDelete}
+                            onDisminuir={onDisminuir}
+                            cantidad={product.cantidad}
+                            onAumentar={onAumentar}
+                            total={context.cantidad}
                         />
                     ))
                 }
